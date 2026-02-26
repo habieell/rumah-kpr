@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\MortgageRequests;
 
-use App\Filament\Resources\MortgageRequests\Pages\CreateMortgageRequest;
-use App\Filament\Resources\MortgageRequests\Pages\EditMortgageRequest;
-use App\Filament\Resources\MortgageRequests\Pages\ListMortgageRequests;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
+use App\Filament\Resources\MortgageRequests\Pages\{CreateMortgageRequest, EditMortgageRequest, ListMortgageRequests};
+use App\Filament\Resources\MortgageRequests\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Resources\MortgageRequests\Schemas\MortgageRequestForm;
 use App\Filament\Resources\MortgageRequests\Tables\MortgageRequestsTable;
 use App\Models\MortgageRequest;
@@ -13,8 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MortgageRequestResource extends Resource
 {
@@ -35,7 +33,7 @@ class MortgageRequestResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            InstallmentsRelationManager::class,
         ];
     }
 

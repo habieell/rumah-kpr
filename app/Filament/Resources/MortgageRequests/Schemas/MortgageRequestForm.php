@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\MortgageRequests\Schemas;
 
-use App\Models\{House, Interest};
-use Filament\Forms\Components\{Hidden, Select, TextInput};
+use App\Models\{House, Interest, User};
+use Filament\Forms\Components\{FileUpload, Hidden, Select, TextInput};
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\{Grid, Wizard};
 use Filament\Schemas\Components\Wizard\Step;
@@ -83,6 +83,24 @@ class MortgageRequestForm
                                 ->preload()
                                 ->required()
                                 ->live(debounce: 0)
+                                ->afterStateHydrated(function ($state, callable $set, callable $get) {
+                                    // ambil raw dari DB (sudah tersimpan)
+                                    $housePrice = (int) ($get('house_price') ?? 0);
+                                    $dpAmount   = (int) ($get('dp_total_amount') ?? 0);
+                                    $loanAmount = (int) ($get('loan_total_amount') ?? 0);
+                                    $monthly    = (int) ($get('monthly_amount') ?? 0);
+                                    $totalPay   = (int) ($get('loan_interest_total_amount') ?? 0);
+
+                                    // set display formatted
+                                    $set('house_price_display', self::fmtIDR($housePrice));
+                                    $set('dp_total_amount_display', self::fmtIDR($dpAmount));
+                                    $set('loan_total_amount_display', self::fmtIDR($loanAmount));
+                                    $set('monthly_amount_display', self::fmtIDR($monthly));
+                                    $set('loan_interest_total_amount_display', self::fmtIDR($totalPay));
+
+                                    // kalau mau ensure hitung ulang juga (optional):
+                                    self::recalc($get, $set);
+                                })
                                 ->afterStateUpdated(function ($state, callable $set, callable $get) {
                                     $price = (int) House::whereKey($state)->value('price');
 
@@ -91,7 +109,6 @@ class MortgageRequestForm
 
                                     self::recalc($get, $set);
                                 }),
-
                             Select::make('interest_id')
                                 ->label('Annual Interest in %')
                                 ->options(function (callable $get) {
@@ -199,6 +216,62 @@ class MortgageRequestForm
                                 ->disabled()
                                 ->dehydrated(false),
                         ]),
+                    ]),
+
+                Step::make('Customer Information')
+                    ->schema([
+                        Select::make('user_id')
+                            ->relationship('customer', 'email')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $user = User::find($state);
+                                $name = $user?->name;
+                                $email = $user?->email;
+                                $set('name', $name);
+                                $set('email', $email);
+                            })
+                            ->afterStateHydrated(function (callable $set, $state) {
+                                $userId = $state;
+
+                                if ($userId) {
+                                    $user = User::find($userId);
+                                    $name = $user?->name;
+                                    $email = $user?->email;
+                                    $set('name', $name);
+                                    $set('email', $email);
+                                }
+                            }),
+
+                        TextInput::make('name')
+                            ->required()
+                            ->readOnly()
+                            ->maxLength(255),
+
+                        TextInput::make('email')
+                            ->required()
+                            ->readOnly()
+                            ->maxLength(255),
+
+
+                    ]),
+
+                Step::make('Bank Approval')
+                    ->schema([
+                        FileUpload::make('documents')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->required(),
+
+                        Select::make('status')
+                            ->label('Approval Status')
+                            ->options([
+                                'Waiting for Bank' => 'Waiting for Bank',
+                                'Approved' => 'Approved',
+                                'Rejected' => 'Rejected',
+                            ])
+                            ->required(),
                     ]),
 
 

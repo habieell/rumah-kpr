@@ -2,14 +2,11 @@
 
 namespace App\Filament\Resources\MortgageRequests\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
-use Filament\Actions\RestoreBulkAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TrashedFilter;
+use App\Models\MortgageRequest;
+use Filament\Actions\{Action, BulkActionGroup, DeleteBulkAction, EditAction, ForceDeleteBulkAction, RestoreBulkAction};
 use Filament\Tables\Table;
+use Filament\Tables\Columns\{ImageColumn, TextColumn};
+use Filament\Tables\Filters\TrashedFilter;
 
 class MortgageRequestsTable
 {
@@ -17,63 +14,25 @@ class MortgageRequestsTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('house_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('interest_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('duration')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('bank_name')
+                ImageColumn::make('house.thumbnail'),
+
+                TextColumn::make('customer.name')
                     ->searchable(),
-                TextColumn::make('interest')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('dp_total_amount')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('dp_percentage')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('loan_total_amount')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('loan_interest_total_amount')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('house_price')
-                    ->money()
-                    ->sortable(),
-                TextColumn::make('monthly_amount')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('status')
-                    ->searchable(),
-                TextColumn::make('documents')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('house.name'),
+
+                TextColumn::make('status'),
             ])
             ->filters([
                 TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('download')
+                    ->label('Download')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(fn(MortgageRequest $record) => asset('storage/' . $record->documents))
+                    ->openUrlInNewTab(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

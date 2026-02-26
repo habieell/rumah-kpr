@@ -3,9 +3,7 @@
 namespace App\Filament\Resources\MortgageRequests\Pages;
 
 use App\Filament\Resources\MortgageRequests\MortgageRequestResource;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\RestoreAction;
+use Filament\Actions\{DeleteAction, ForceDeleteAction, RestoreAction};
 use Filament\Resources\Pages\EditRecord;
 
 class EditMortgageRequest extends EditRecord
@@ -19,5 +17,10 @@ class EditMortgageRequest extends EditRecord
             ForceDeleteAction::make(),
             RestoreAction::make(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return static::$resource::getUrl('index');
     }
 }

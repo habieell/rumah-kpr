@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateMortgageRequest extends CreateRecord
 {
     protected static string $resource = MortgageRequestResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::$resource::getUrl('index');
+    }
 }
