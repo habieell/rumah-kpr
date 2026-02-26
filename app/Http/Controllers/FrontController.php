@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\{HouseService, MortgageService};
 
 class FrontController extends Controller
 {
+    protected HouseService $houseService;
+    protected MortgageService $mortgageService;
+
+    public function __construct(HouseService $houseService, MortgageService $mortgageService)
+    {
+        $this->houseService = $houseService;
+        $this->mortgageService = $mortgageService;
+    }
+
     public function index()
     {
-        $categories = Category::latest()->get();
-
-        return view('welcome');
+        $data = $this->houseService->getCategoriesAndCities();
+        return view('front.index', $data);
     }
 }
