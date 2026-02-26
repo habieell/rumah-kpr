@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Houses;
 
-use App\Filament\Resources\Houses\Pages\CreateHouse;
-use App\Filament\Resources\Houses\Pages\EditHouse;
-use App\Filament\Resources\Houses\Pages\ListHouses;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
+use App\Filament\Resources\Houses\Pages\{CreateHouse, EditHouse, ListHouses};
 use App\Filament\Resources\Houses\Schemas\HouseForm;
 use App\Filament\Resources\Houses\Tables\HousesTable;
 use App\Models\House;
@@ -13,14 +12,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class HouseResource extends Resource
 {
     protected static ?string $model = House::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHomeModern;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Products';
 
     public static function form(Schema $schema): Schema
     {

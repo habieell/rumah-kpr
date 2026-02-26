@@ -39,4 +39,21 @@ class MortgageRequest extends Model
     {
         return $this->hasMany(Installment::class, 'mortgage_request_id');
     }
+
+    public function getRemainingLoanAmountAttribute()
+    {
+        // Check if there are any installments
+        if ($this->installments()->count() === 0) {
+            // Default to the total loan interest amount if no installments exist
+            return $this->loan_interest_total_amount;
+        }
+
+        // Calculate the total paid amount from installments
+        $totalPaid = $this->installments()
+            ->where('is_paid', true)
+            ->sum('sub_total_amount');
+
+        // Subtract the total paid from the total loan amount
+        return max($this->loan_interest_total_amount - $totalPaid, 0);
+    }
 }

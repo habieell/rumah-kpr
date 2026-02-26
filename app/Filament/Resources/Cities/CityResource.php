@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Cities;
 
-use App\Filament\Resources\Cities\Pages\CreateCity;
-use App\Filament\Resources\Cities\Pages\EditCity;
-use App\Filament\Resources\Cities\Pages\ListCities;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
+use App\Filament\Resources\Cities\Pages\{CreateCity, EditCity, ListCities};
 use App\Filament\Resources\Cities\Schemas\CityForm;
 use App\Filament\Resources\Cities\Tables\CitiesTable;
 use App\Models\City;
@@ -13,14 +12,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class CityResource extends Resource
 {
     protected static ?string $model = City::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Management';
 
     public static function form(Schema $schema): Schema
     {

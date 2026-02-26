@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Facilities;
 
-use App\Filament\Resources\Facilities\Pages\CreateFacility;
-use App\Filament\Resources\Facilities\Pages\EditFacility;
-use App\Filament\Resources\Facilities\Pages\ListFacilities;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
+use App\Filament\Resources\Facilities\Pages\{CreateFacility, EditFacility, ListFacilities};
 use App\Filament\Resources\Facilities\Schemas\FacilityForm;
 use App\Filament\Resources\Facilities\Tables\FacilitiesTable;
 use App\Models\Facility;
@@ -13,14 +12,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class FacilityResource extends Resource
 {
     protected static ?string $model = Facility::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedWrenchScrewdriver;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Products';
 
     public static function form(Schema $schema): Schema
     {

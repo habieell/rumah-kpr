@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Interests;
 
-use App\Filament\Resources\Interests\Pages\CreateInterest;
-use App\Filament\Resources\Interests\Pages\EditInterest;
-use App\Filament\Resources\Interests\Pages\ListInterests;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
+use App\Filament\Resources\Interests\Pages\{CreateInterest, EditInterest, ListInterests};
 use App\Filament\Resources\Interests\Schemas\InterestForm;
 use App\Filament\Resources\Interests\Tables\InterestsTable;
 use App\Models\Interest;
@@ -13,14 +12,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class InterestResource extends Resource
 {
     protected static ?string $model = Interest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Vendors';
 
     public static function form(Schema $schema): Schema
     {

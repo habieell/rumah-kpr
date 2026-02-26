@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Banks;
 
-use App\Filament\Resources\Banks\Pages\CreateBank;
-use App\Filament\Resources\Banks\Pages\EditBank;
-use App\Filament\Resources\Banks\Pages\ListBanks;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
+use App\Filament\Resources\Banks\Pages\{CreateBank, EditBank, ListBanks};
 use App\Filament\Resources\Banks\Schemas\BankForm;
 use App\Filament\Resources\Banks\Tables\BanksTable;
 use App\Models\Bank;
@@ -13,14 +12,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class BankResource extends Resource
 {
     protected static ?string $model = Bank::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Vendors';
 
     public static function form(Schema $schema): Schema
     {
